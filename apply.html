@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Apply</title></head>
+<body>
+<h2>Account Application</h2>
+<input id="name" placeholder="Full Name">
+<input id="mobile" placeholder="Mobile">
+<select id="type"><option>Savings</option><option>Current</option></select>
+<button onclick="apply()">Submit</button>
+
+<script src="js/firebase.js" type="module"></script>
+<script type="module">
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+let uid;
+onAuthStateChanged(auth,u=>uid=u.uid);
+
+window.apply = async function(){
+ await addDoc(collection(db,"applications"),{
+  uid,name:name.value,mobile:mobile.value,type:type.value,status:"Pending",created:new Date()
+ });
+ alert("Submitted");
+ location.href="dashboard.html";
+}
+</script>
+</body>
+</html>

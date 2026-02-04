@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Admin</title></head>
+<body>
+<h2>Admin Panel - MBS Mats Banks</h2>
+<div id="apps"></div>
+
+<script src="js/firebase.js" type="module"></script>
+<script type="module">
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { doc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+onAuthStateChanged(auth, async user=>{
+ const u = await getDoc(doc(db,"users",user.uid));
+ if(u.data().role!=="admin"){alert("Not admin");return;}
+ onSnapshot(collection(db,"applications"),s=>{
+  apps.innerHTML="";
+  s.forEach(d=>{
+   apps.innerHTML+=`<div>${d.data().name} - ${d.data().status}
+   <button onclick="approve('${d.id}')">Approve</button></div>`;
+  });
+ });
+});
+
+window.approve = async function(id){
+ await updateDoc(doc(db,"applications",id),{status:"Approved"});
+}
+</script>
+</body>
+</html>
